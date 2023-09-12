@@ -15,8 +15,12 @@ RUN set -xe && \
     apk add --no-cache curl libcap su-exec shadow tar transmission-daemon && \
     setcap 'cap_net_bind_service=+ep' /usr/bin/transmission-daemon && \
     cd /tmp && \
-    curl -sSL https://github.com/ronggang/transmission-web-control/archive/v$WEB_VERSION.tar.gz | \
-    tar xz --strip 1 && \
+    if [ "$WEB_VERSION" = "latest" ]; then \
+        WEBURL="https://github.com/ronggang/transmission-web-control/tarball/master"; \
+    else \
+        WEBURL="https://github.com/ronggang/transmission-web-control/archive/v$WEB_VERSION.tar.gz"; \
+    fi && \
+    curl -sSL $WEBURL | tar xz --strip 1 && \
     cp /usr/share/transmission/public_html/index.html /usr/share/transmission/public_html/index.original.html && \
     cp -rf /tmp/src/* /usr/share/transmission/public_html/ && \
     apk del curl libcap tar && \

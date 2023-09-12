@@ -4,13 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'version'
+        description: 'Transmission version'
         required: true
-        default: '4.0.3'
+        default: '4.0.4'
       web_version:
         description: 'Web Control version'
         required: true
-        default: '1.6.1-update1'
+        default: 'latest'
 
 jobs:
   build:
@@ -24,7 +24,7 @@ jobs:
           VERSION=${{ github.event.inputs.version }}
           WEB_VERSION=${{ github.event.inputs.web_version }}
           IMAGE_NAME=transmission
-          TAGS="gists/${IMAGE_NAME}:${VERSION},gists/${IMAGE_NAME}:latest"
+          TAGS="${{ secrets.DOCKERHUB_USERNAME }}/${IMAGE_NAME}:${VERSION},${{ secrets.DOCKERHUB_USERNAME }}/${IMAGE_NAME}:latest"
           echo "build_args1=VERSION=${VERSION}" >> $GITHUB_OUTPUT
           echo "build_args2=WEB_VERSION=${WEB_VERSION}" >> $GITHUB_OUTPUT
           echo "image-name=${IMAGE_NAME}" >> $GITHUB_OUTPUT
